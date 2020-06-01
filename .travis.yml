@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - 13
+
+services:
+  - docker
+
+script:
+  - docker --version
+  - docker build -t udagram-reverse-proxy .
+  - docker tag udagram-reverse-proxy ${DOCKER_USERNAME}/udagram-reverse-proxy:latest
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push ${DOCKER_USERNAME}/udagram-reverse-proxy
